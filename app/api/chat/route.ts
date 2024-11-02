@@ -34,6 +34,20 @@ export async function POST(req: Request) {
         }),
         execute: async ({question}) => findRelevantContent(question),
       }),
+      yesNo: tool({
+        description: `answer yes or no questions using your knowledge base.`,
+        parameters: z.object({
+          question: z.string().describe('the users question'),
+        }),
+        execute: async ({question}) => {
+          const content = await findRelevantContent(question)
+          if (content) {
+            return {answer: 'yes', confidence: 0.9}
+          } else {
+            return {answer: 'no', confidence: 0.9}
+          }
+        },
+      }),
     },
   })
 
